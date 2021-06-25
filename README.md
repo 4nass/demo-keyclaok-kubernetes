@@ -1,4 +1,4 @@
-# demo-keyclaok-kubernetes
+# Demo Keyclaok on Kubernetes
 Keycloak implementation in loacl Kubernetes environment (minikube).
 
 ## Requirements:
