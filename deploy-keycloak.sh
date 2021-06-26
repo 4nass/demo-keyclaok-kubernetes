@@ -131,7 +131,7 @@ Menu:
 		read -p "The database host (****.mysql.database.azure.com) 		   : " DB_HOST;
 		read -p "The database port (3306)                                  : " DB_PORT;
 		read -p "The database name (********)                              : " DB_NAME;
-		read -p "The database username (******@******        )             : " DB_USERNAME;
+		read -p "The database username (******@******)		               : " DB_USERNAME;
 		read -p "The database password (******)                            : " DB_PASSWORD;
 				
 		if [ "${ENV_NAME}" = "prod" ]; then
