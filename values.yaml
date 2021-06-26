@@ -1,4 +1,4 @@
-fullnameOverride: "passconnect"
+fullnameOverride: "connect"
 
 nameOverride: ""
 
@@ -74,7 +74,7 @@ extraEnv: |
   - name: KEYCLOAK_USER
     value: "admin"
   - name: KEYCLOAK_PASSWORD
-    value: "password"
+    value: "admin"
   - name: DB_VENDOR
     value: "POSTGRES"
   - name: DB_ADDR
@@ -82,11 +82,11 @@ extraEnv: |
   - name: DB_PORT
     value: "5432"
   - name: DB_DATABASE
-    value: "kc-passconnect-groupe-vyv-fr"
+    value: "kc-connect-groupe-vyv-fr"
   - name: DB_USER
     value: "admin"
   - name: DB_PASSWORD
-    value: "password"
+    value: "admin"
   - name: JDBC_PARAMS
     value: "useSSL=false&allowPublicKeyRetrieval=true&connectTimeout=240&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=Europe/Paris"
   - name: KUBERNETES_NAMESPACE
@@ -211,26 +211,26 @@ ingress:
   labels: {}
   rules:
     -
-      host: 'passconnect.groupe-vyv.fr'
+      host: 'connect.groupe-vyv.fr'
       paths:
         - /
   tls:
     - hosts:
-        - passconnect.groupe-vyv.fr
+        - connect.groupe-vyv.fr
       secretName: "groupe-vyv-fr-tls"
   console:
     enabled: false
     annotations: 
       ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
-      nginx.ingress.kubernetes.io/auth-tls-secret: "kc-passconnect-groupe-vyv-fr/internal-ca"
-      nginx.ingress.kubernetes.io/auth-tls-error-page: "https://passconnect.groupe-vyv.fr/auth/error-cert.html"
+      nginx.ingress.kubernetes.io/auth-tls-secret: "kc-connect-groupe-vyv-fr/internal-ca"
+      nginx.ingress.kubernetes.io/auth-tls-error-page: "https://connect.groupe-vyv.fr/auth/error-cert.html"
       nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
       nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
       nginx.ingress.kubernetes.io/use-regex: "true"
     rules:
       -
-        host: 'console-passconnect.groupe-vyv.fr'
+        host: 'console-connect.groupe-vyv.fr'
         paths:
           - /
 
@@ -271,8 +271,8 @@ pgchecker:
 postgresql:
   enabled: true
   postgresqlUsername: admin
-  postgresqlPassword: password
-  postgresqlDatabase: kc-passconnect-groupe-vyv-fr
+  postgresqlPassword: admin
+  postgresqlDatabase: kc-connect-groupe-vyv-fr
   networkPolicy:
     enabled: false
       
