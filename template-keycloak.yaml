@@ -5,8 +5,8 @@ nameOverride: ""
 replicas: ${replicas}
 
 image:
-  repository: ${image_repo}
-  tag: "${tag}"
+  repository: "quay.io/keycloak/keycloak"
+  tag: "12.0.4"
   pullPolicy: Always
 
 imagePullSecrets: []
