@@ -113,36 +113,38 @@ create_certs () {
 }
 
 helm_install () {
-	# $1: NAMESPACE
-	# $2: VALUES FILE
-	# $3: IMAGE REPOSITORY
-	# $4: IMAGE TAG
-	# $5: HELM CHART PATH
-	echo "Deploying Keycloak in $1 namespace using $2 Helm chart..."
-	helm install keycloak \
-		--namespace $1 \
-		--values $2 \
-		--set image.repository=$3 \
-        --set image.tag=$4 \
-		$5
+	# $1: RELEASE NAME
+	# $2: NAMESPACE
+	# $3: VALUES FILE
+	# $4: IMAGE REPOSITORY
+	# $5: IMAGE TAG
+	# $6: HELM CHART PATH
+	echo "Deploying Keycloak in $2 namespace using $3 Helm chart..."
+	helm install $1 \
+		--namespace $2 \
+		--values $3 \
+		--set image.repository=$4 \
+        --set image.tag=$5 \
+		$6
 }
 
 helm_upgrade () {
-	# $1: NAMESPACE
-	# $2: VALUES FILE
-	# $3: IMAGE REPOSITORY
-	# $4: IMAGE TAG
-	# $5: HELM CHART PATH
-	echo "Deploying Keycloak in $1 namespace using $2 Helm chart..."
-	helm upgrade keycloak \
-        --namespace $1 \
+	# $1: RELEASE NAME
+	# $2: NAMESPACE
+	# $3: VALUES FILE
+	# $4: IMAGE REPOSITORY
+	# $5: IMAGE TAG
+	# $6: HELM CHART PATH
+	echo "Deploying Keycloak in $2 namespace using $3 Helm chart..."
+	helm upgrade $1 \
+        --namespace $2 \
         --create-namespace \
         --install \
         --wait \
-		--values $2 \
-        --set image.repository=$3 \
-        --set image.tag=$4 \
-		$5
+		--values $3 \
+        --set image.repository=$4 \
+        --set image.tag=$5 \
+		$6
 }
 
 while [[ $loop ]]; 
@@ -186,14 +188,14 @@ Menu:
 		fi
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-		helm_install ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
+		helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
 
 		read -s -n 1 -p "Press any key to continue..."
 		;;
 	2)  set_deployment_vars values.yaml false
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-		helm_install ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
+		helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
 
 		read -s -n 1 -p "Press any key to continue..."
 		;;
