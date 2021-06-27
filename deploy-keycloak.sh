@@ -3,6 +3,7 @@
 loop=true
 
 set_quick_deployment_vars () {
+	# $1: VALUES FILE
 	ENV_NAME="prod"
     REALM="auth"
 	ENTITY_NAME="keycloak"
@@ -34,8 +35,8 @@ set_quick_deployment_vars () {
 	export tls_secret=${ENTITY_NAME}-${COUNTRY_CODE}-tls;
 	export namespace=${NAMESPACE};
 
-	rm -f values.yaml tmp.yaml  
-	( echo "cat <<EOF >values.yaml";
+	rm -f $1 tmp.yaml  
+	( echo "cat <<EOF >$1";
 	cat template.yaml;
 	) >tmp.yaml
 	. tmp.yaml
@@ -43,6 +44,8 @@ set_quick_deployment_vars () {
 }
 
 set_deployment_vars () {
+	# $1: VALUES FILE
+	# $2: ENABLE POSTGRESQL [true|false]
 	read -p "Environnement name [dev|preprod|prod]                     : " ENV_NAME;
 	read -p "Entity name                                               : " ENTITY_NAME;
 	read -p "Country code                                              : " COUNTRY_CODE;
@@ -57,7 +60,7 @@ set_deployment_vars () {
 	fi
 	read -p "Username for the Keycloak admin user                      : " KC_USERNAME;
 	read -p "Password for the Keycloak admin user                      : " KC_PASSWORD;
-	if [ "$1" = "postgresql" ] || [ "$1" = "Postgresql" ] || [ "$1" = "POSGRESQL" ] ; then
+	if [ "$2" = "true" ] || [ "$2" = "True" ] || [ "$2" = "TRUE" ] ; then
 		read -p "Username for the Postgres admin user                      : " PG_USERNAME;
 		read -p "Password for the Postgres admin user                      : " PG_PASSWORD;
 		export pg_username=${PG_USERNAME};
@@ -93,8 +96,8 @@ set_deployment_vars () {
 	export tls_secret=${ENTITY_NAME}-${COUNTRY_CODE}-tls;
 	export namespace=${NAMESPACE};
 
-	rm -f values.yaml tmp.yaml  
-	( echo "cat <<EOF >values.yaml";
+	rm -f $1 tmp.yaml  
+	( echo "cat <<EOF >$1";
 	cat template.yaml;
 	) >tmp.yaml
 	. tmp.yaml
@@ -177,9 +180,9 @@ Menu:
 	case "$MENU_CHOICE" in
 	1)  read -p "Quick deployment [y/n]                : " QUICK;
 		if [ "${QUICK}" = "Y" ] || [ "${QUICK}" = "y" ] || [ "${QUICK}" = "yes" ] || [ "${QUICK}" = "YES" ] ; then
-			set_quick_deployment_vars
+			set_quick_deployment_vars values.yaml
 		else
-			set_deployment_vars postgresql
+			set_deployment_vars values.yaml true
 		fi
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
@@ -187,7 +190,7 @@ Menu:
 
 		read -s -n 1 -p "Press any key to continue..."
 		;;
-	2)  set_deployment_vars 
+	2)  set_deployment_vars values.yaml false
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
 		helm_install ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
