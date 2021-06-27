@@ -75,6 +75,7 @@ set_quick_deployment_vars () {
 		rm -f tmp.yaml >/dev/null
 	else
 		echo "ERROR set_quick_deployment_vars: Number of arguments error $*"
+		echo "Usage: set_quick_deployment_vars VALUES_FILE"
 		exit
 	fi
 }
@@ -140,6 +141,7 @@ set_deployment_vars () {
 		rm -f tmp.yaml >/dev/null
 	else
 		echo "ERROR set_deployment_vars: Number of arguments error $*"
+		echo "Usage: set_deployment_vars VALUES_FILE ENABLE_POSTGRESQL"
 		exit
 	fi
 }
@@ -156,6 +158,7 @@ create_certs () {
 		kubectl create secret tls $1-$2-tls --namespace=$3 --cert=certs/tls.crt --key=certs/tls.key
 	else
 		echo "ERROR create_certs: Number of arguments error $*"
+		echo "Usage: create_certs ENTITY_NAME COUNTRY_CODE NAMESPACE"
 		exit
 	fi
 }
@@ -177,6 +180,7 @@ helm_install () {
 			$6
 	else
 		echo "ERROR helm_install: Number of arguments error $*"
+		echo "Usage: helm_install RELEASE_NAME NAMESPACE VALUES_FILE IMAGE_REPOSITORY IMAGE_TAG HELM_CHART_PATH"
 		exit
 	fi
 }
@@ -201,6 +205,7 @@ helm_upgrade () {
 			$6
 	else
 		echo "ERROR helm_upgrade: Number of arguments error $*"
+		echo "Usage: helm_upgrade RELEASE_NAME NAMESPACE VALUES_FILE IMAGE_REPOSITORY IMAGE_TAG HELM_CHART_PATH"
 		exit
 	fi
 }
