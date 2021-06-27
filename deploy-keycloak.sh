@@ -20,7 +20,7 @@ set_quick_deployment_vars () {
 			NAMESPACE=kc-${REALM}-${ENTITY_NAME}-${COUNTRY_CODE}-${ENV_NAME};
 			ING_HOSTNAME=${REALM}-${ENV_NAME}.${ENTITY_NAME}.${COUNTRY_CODE};
 	fi
-	echo "Deploying Keyclaok & Postgresql in $ENV_NAME environment..."
+	echo "Deploying Keycloak & Postgresql in $ENV_NAME environment..."
 	echo "Keycloak credentials: $KC_USERNAME:$KC_PASSWORD"
 	echo "Postgres credentials: $PG_USERNAME:$PG_PASSWORD"
 	export pod_name=${REALM};
@@ -111,33 +111,35 @@ create_certs () {
 
 helm_install () {
 	# $1: NAMESPACE
-	# $2: HELM CHART PATH
+	# $2: VALUES FILE
 	# $3: IMAGE REPOSITORY
 	# $4: IMAGE TAG
+	# $5: HELM CHART PATH
 	echo "Deploying Keycloak in $1 namespace using $2 Helm chart..."
 	helm install keycloak \
 		--namespace $1 \
-		--values values.yaml \
+		--values $2 \
 		--set image.repository=$3 \
         --set image.tag=$4 \
-		$2
+		$5
 }
 
 helm_upgrade () {
 	# $1: NAMESPACE
-	# $2: HELM CHART PATH
+	# $2: VALUES FILE
 	# $3: IMAGE REPOSITORY
 	# $4: IMAGE TAG
+	# $5: HELM CHART PATH
 	echo "Deploying Keycloak in $1 namespace using $2 Helm chart..."
 	helm upgrade keycloak \
         --namespace $1 \
         --create-namespace \
         --install \
         --wait \
-		--values values.yaml \
+		--values $2 \
         --set image.repository=$3 \
         --set image.tag=$4 \
-		$2
+		$5
 }
 
 while [[ $loop ]]; 
@@ -181,14 +183,14 @@ Menu:
 		fi
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-		helm_install ${NAMESPACE} ./keycloak-11.0.1.tgz an455/kc12.0.4 latest
+		helm_install ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
 
 		read -s -n 1 -p "Press any key to continue..."
 		;;
 	2)  set_deployment_vars 
 		kubectl create namespace ${NAMESPACE} 
 		create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-		helm_install ${NAMESPACE} ./keycloak-11.0.1.tgz an455/kc12.0.4 latest
+		helm_install ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
 
 		read -s -n 1 -p "Press any key to continue..."
 		;;
