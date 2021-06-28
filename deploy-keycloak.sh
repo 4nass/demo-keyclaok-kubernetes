@@ -185,7 +185,7 @@ helm_install () {
 	fi
 }
 
-helm_upgrade () {
+helm_upgrade_install () {
 	# $1: RELEASE NAME
 	# $2: NAMESPACE
 	# $3: VALUES FILE
@@ -198,10 +198,12 @@ helm_upgrade () {
 			--namespace $2 \
 			--create-namespace \
 			--install \
+			--recreate-pods \
+			--force \
+			--reset-values \
 			--wait \
 			--values $3 \
-			--set image.repository=$4 \
-			--set image.tag=$5 \
+			--set image.repository=$4,image.tag=$5 \
 			$6
 	else
 		echo "ERROR helm_upgrade: Number of arguments error $*"
