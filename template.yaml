@@ -211,12 +211,13 @@ ingress:
   labels: {}
   rules:
     -
-      host: '${ing_hostname}'
+      host: "${ing_hostname}"
       paths:
-        - /
+        - path: /
+          pathType: Prefix
   tls:
     - hosts:
-        - ${ing_hostname}
+        - "${ing_hostname}"
       secretName: "${tls_secret}"
   console:
     enabled: false
@@ -232,7 +233,8 @@ ingress:
       -
         host: 'console-${ing_hostname}'
         paths:
-          - /
+          - path: /auth/admin/
+            pathType: Prefix
 
 networkPolicy:
   enabled: false

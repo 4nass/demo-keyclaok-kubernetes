@@ -211,12 +211,13 @@ ingress:
   labels: {}
   rules:
     -
-      host: 'auth.keycloak.com'
+      host: "auth.keycloak.com"
       paths:
-        - /
+        - path: /
+          pathType: Prefix
   tls:
     - hosts:
-        - auth.keycloak.com
+        - "auth.keycloak.com"
       secretName: "keycloak-com-tls"
   console:
     enabled: false
@@ -232,7 +233,8 @@ ingress:
       -
         host: 'console-auth.keycloak.com'
         paths:
-          - /
+          - path: /auth/admin/
+            pathType: Prefix
 
 networkPolicy:
   enabled: false

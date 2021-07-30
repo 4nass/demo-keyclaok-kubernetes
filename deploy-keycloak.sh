@@ -1,7 +1,5 @@
 #!/bin/bash
 
-loop=true
-
 print_menu () {
 	clear
 	echo '------*~                                                    ~*-----------------------
@@ -163,6 +161,21 @@ create_certs () {
 	fi
 }
 
+#follow_logs () {
+	# $1: RELEASE NAME
+	# $2: NAMESPACE
+#	if [ $(kubectl get $(kubectl get pods --namespace $2 -l "app.kubernetes.io/name=$1,app.kubernetes.io/instance=$1" -o name) -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' -n ${NAMESPACE}) != "True" ]; then
+#			i=1
+#			sp="/-\|"
+#			echo -ne '\nWaiting for Keycloak pod to start... '
+#			while [[ $(kubectl get $(kubectl get pods --namespace $2 -l "app.kubernetes.io/name=$1,app.kubernetes.io/instance=$1" -o name) -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}' -n ${NAMESPACE}) != "True" ]]; do 
+#				printf "\b${sp:i++%${#sp}:1}";
+#			done
+#			echo -e "\nKeycloak is ready..."
+#		fi
+#	kubectl logs $(kubectl get pods --namespace $2 -l "app.kubernetes.io/name=$1,app.kubernetes.io/instance=$1" -o name) -f -n $2
+#}
+
 helm_install () {
 	# $1: RELEASE NAME
 	# $2: NAMESPACE
@@ -178,6 +191,7 @@ helm_install () {
 			--set image.repository=$4 \
 			--set image.tag=$5 \
 			$6
+#		follow_logs $1 $2
 	else
 		echo "ERROR helm_install: Number of arguments error $*"
 		echo "Usage: helm_install RELEASE_NAME NAMESPACE VALUES_FILE IMAGE_REPOSITORY IMAGE_TAG HELM_CHART_PATH"
@@ -205,6 +219,7 @@ helm_upgrade_install () {
 			--values $3 \
 			--set image.repository=$4,image.tag=$5 \
 			$6
+#		follow_logs $1 $2
 	else
 		echo "ERROR helm_upgrade: Number of arguments error $*"
 		echo "Usage: helm_upgrade RELEASE_NAME NAMESPACE VALUES_FILE IMAGE_REPOSITORY IMAGE_TAG HELM_CHART_PATH"
@@ -226,14 +241,14 @@ main () {
 			fi
 			kubectl create namespace ${NAMESPACE} 
 			create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-			helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
+			helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-14.0.1.tgz
 
 			read -s -n 1 -p "Press any key to continue..."
 			;;
 		2)  set_deployment_vars values.yaml false
 			kubectl create namespace ${NAMESPACE} 
 			create_certs ${ENTITY_NAME} ${COUNTRY_CODE} ${NAMESPACE}
-			helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-11.0.1.tgz
+			helm_install keycloak ${NAMESPACE} values.yaml an455/kc12.0.4 latest ./keycloak-14.0.1.tgz
 
 			read -s -n 1 -p "Press any key to continue..."
 			;;
@@ -251,4 +266,5 @@ main () {
 	done
 }
 
+loop=true
 main
